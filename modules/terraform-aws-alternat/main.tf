@@ -111,7 +111,8 @@ resource "aws_autoscaling_group" "nat_instance" {
   }
 
   provisioner "local-exec" {
-    command = var.create_nat_gateways ? "" : "echo ${obj.nat_gateway_id}"
+    for_each = { for obj in var.vpc_az_maps : obj.az => obj.nat_gateway_id }
+    command = var.create_nat_gateways ? "" : "echo ${each.value}"
   }
 }
 
