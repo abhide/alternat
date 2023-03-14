@@ -49,6 +49,11 @@ locals {
   # var.nat_instance_eip_ids ignored if doesn't match AZ count
   reuse_nat_instance_eips = length(var.nat_instance_eip_ids) == length(var.vpc_az_maps)
   nat_instance_eip_ids    = local.reuse_nat_instance_eips ? var.nat_instance_eip_ids : aws_eip.nat_instance_eips[*].id
+
+  provisioner "local-exec" {
+    command = "echo 'foobar'"
+    when    = destroy
+  }
 }
 
 resource "aws_eip" "nat_instance_eips" {
