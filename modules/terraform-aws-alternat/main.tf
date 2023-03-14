@@ -111,7 +111,7 @@ resource "aws_autoscaling_group" "nat_instance" {
   }
 
   provisioner "local-exec" {
-    command = var.create_nat_gateways ? "" : "echo ${self.nat_gateway_id}"
+    command = var.create_nat_gateways ? "" : "echo ${obj.nat_gateway_id}"
   }
 }
 
