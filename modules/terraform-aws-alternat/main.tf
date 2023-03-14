@@ -19,6 +19,9 @@ locals {
 
   # One private subnet in each AZ to use for the VPC endpoints
   az_private_subnets = [for obj in var.vpc_az_maps : element(obj.private_subnet_ids, 0)]
+
+  //# If create_nat_gateway is false, then find one NAT gateway in each public AZ
+  //nat_gateway_ids = var.create_nat_gateway ? [] : [for obj in var.vpc_az_maps : element(obj.nat_gateway_ids, 0)]
   ec2_endpoint = (
     var.enable_ec2_endpoint
     ? {
@@ -108,8 +111,7 @@ resource "aws_autoscaling_group" "nat_instance" {
   }
 
   provisioner "local-exec" {
-    command = "echo 'foobar'"
-    when    = destroy
+    command = var.create_nat_gateways ? "" : "echo ${self.nat_gateway_id}"
   }
 }
 
